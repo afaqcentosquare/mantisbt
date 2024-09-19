@@ -45,18 +45,15 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		$t_handler_array = array();
 		$t_handler_ids = array();
 
-//		while ($t_row = $t_query->fetch()) {
-//				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
-//				$t_handler_ids[] = $t_row['handler_id'];
-//		}
-		
-		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_query->fetch()
-		]);
+		while ($t_row = $t_query->fetch()) {
+				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
+				$t_handler_ids[] = $t_row['handler_id'];
+		}
+
 
 		if (count($t_handler_array) == 0) {
 				return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-						'data' => $t_specific_where
+						'data' => $t_handler_array
 				]);
 		}
 
@@ -69,6 +66,6 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		arsort($t_metrics);
 		
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_specific_where
+				'data' => $t_metrics
 		]);
 }
