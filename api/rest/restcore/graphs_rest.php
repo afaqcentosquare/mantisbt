@@ -38,10 +38,10 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		}
 		$t_sql .= ' GROUP BY handler_id ORDER BY count DESC';
 		$t_query->sql($t_sql);
-//		$t_query->bind(array(
-//				'nouser' => NO_USER,
-//				'status_resolved' => (int)$t_resolved_status_threshold,
-//		));
+		$t_query->bind(array(
+				'nouser' => NO_USER,
+				'status_resolved' => (int)$t_resolved_status_threshold,
+		));
 
 		$t_handler_array = array();
 		$t_handler_ids = array();
@@ -66,6 +66,6 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		arsort($t_metrics);
 		
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_metrics
+				'data' => $t_specific_where
 		]);
 }
