@@ -29,8 +29,7 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
  	$t_resolved_status_threshold = config_get('bug_resolved_status_threshold');
 
 		$t_query = new DBQuery();
-		$t_sql = 'SELECT handler_id, count(*) as count FROM {bug} WHERE ' . $t_specific_where
-				. ' AND handler_id <> :nouser AND status < :status_resolved';
+		$t_sql = 'SELECT handler_id, count(*) as count FROM {bug}';
 		if (!empty($p_filter)) {
 				$t_subquery = filter_cache_subquery($p_filter);
 				$t_sql .= ' AND {bug}.id IN :filter';
@@ -50,6 +49,10 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
 				$t_handler_ids[] = $t_row['handler_id'];
 		}
+		
+		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
+				'data' => $t_query->fetch()
+		]);
 
 		if (count($t_handler_array) == 0) {
 				return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
