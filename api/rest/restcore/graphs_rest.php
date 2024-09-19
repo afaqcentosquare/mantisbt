@@ -24,7 +24,7 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		$p_filter = summary_get_filter();
 		
 		$t_project_id = helper_get_current_project();
-//		$t_user_id = auth_get_current_user_id();
+		$t_user_id = auth_get_current_user_id();
 //		$t_specific_where = helper_project_specific_where($t_project_id, $t_user_id);
 //		$t_resolved_status_threshold = config_get('bug_resolved_status_threshold');
 //
@@ -66,6 +66,6 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 //		arsort($t_metrics);
 		
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_project_id
+				'data' => $t_user_id
 		]);
 }
