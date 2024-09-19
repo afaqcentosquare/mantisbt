@@ -21,19 +21,21 @@ $g_app->group('/dashboard', function () use ($g_app) {
 	*/
 function rest_dashboard_get(Request $p_request, Response $p_response, array $p_args): Response
 {
-		$t_project_id = 1;
-		$t_user_id = 1;
+		$p_filter = summary_get_filter();
+		
+		$t_project_id = helper_get_current_project();
+		$t_user_id = auth_get_current_user_id();
 		$t_specific_where = helper_project_specific_where($t_project_id, $t_user_id);
 		$t_resolved_status_threshold = config_get('bug_resolved_status_threshold');
 		
 		$t_query = new DBQuery();
 		$t_sql = 'SELECT handler_id, count(*) as count FROM {bug} WHERE ' . $t_specific_where
 				. ' AND handler_id <> :nouser AND status < :status_resolved';
-//		if (!empty($p_filter)) {
-//				$t_subquery = filter_cache_subquery($p_filter);
-//				$t_sql .= ' AND {bug}.id IN :filter';
-//				$t_query->bind('filter', $t_subquery);
-//		}
+		if (!empty($p_filter)) {
+				$t_subquery = filter_cache_subquery($p_filter);
+				$t_sql .= ' AND {bug}.id IN :filter';
+				$t_query->bind('filter', $t_subquery);
+		}
 		$t_sql .= ' GROUP BY handler_id ORDER BY count DESC';
 		$t_query->sql($t_sql);
 		$t_query->bind(array(
