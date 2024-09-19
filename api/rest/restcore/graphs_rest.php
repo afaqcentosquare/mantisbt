@@ -45,10 +45,10 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		$t_handler_array = array();
 		$t_handler_ids = array();
 
-		while ($t_row = $t_query->fetch()) {
-				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
-				$t_handler_ids[] = $t_row['handler_id'];
-		}
+//		while ($t_row = $t_query->fetch()) {
+//				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
+//				$t_handler_ids[] = $t_row['handler_id'];
+//		}
 		
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
 				'data' => $t_query->fetch()
