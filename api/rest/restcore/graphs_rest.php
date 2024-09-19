@@ -66,6 +66,6 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 //		arsort($t_metrics);
 		
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_user_id
+				'data' => $p_filter
 		]);
 }
