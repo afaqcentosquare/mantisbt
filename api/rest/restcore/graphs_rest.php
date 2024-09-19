@@ -146,7 +146,8 @@ function bug_status_summary(array $p_filter = null)
 }
 
 
-function bug_enum_summary( $p_enum_string, $p_enum, array $p_exclude_codes = array(), array $p_filter = null ) {
+function bug_enum_summary( $p_enum_string, $p_enum, array $p_exclude_codes = array(), array $p_filter = null ): array
+{
 		$t_project_id = helper_get_current_project();
 		$t_user_id = auth_get_current_user_id();
 		$t_specific_where = helper_project_specific_where( $t_project_id, $t_user_id );
