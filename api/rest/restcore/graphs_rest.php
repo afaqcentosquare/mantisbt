@@ -26,6 +26,7 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 		$data = [
 				'developer_resolved_summary' => developer_resolved_summary($p_filter),
 				'developer_open_summary' => developer_open_summary($p_filter),
+				'bug_status_summary' => bug_status_summary($p_filter),
 		];
 		
 		
@@ -123,3 +124,22 @@ function developer_open_summary( array $p_filter = null ) {
 		return $t_metrics;
 }
 
+function bug_status_summary( array $p_filter = null ) {
+		if( null === $p_filter || !filter_is_temporary( $p_filter ) ) {
+				$t_status_enum = config_get( 'status_enum_string' );
+				$t_statuses = MantisEnum::getValues( $t_status_enum );
+				$t_closed_threshold = config_get( 'bug_closed_status_threshold' );
+				
+				$t_closed_statuses = array();
+				foreach( $t_statuses as $t_status_code ) {
+						if( $t_status_code >= $t_closed_threshold ) {
+								$t_closed_statuses[] = $t_status_code;
+						}
+				}
+		} else {
+				# when explicitly using a filter, do not exclude any status, to match the expected filter results
+				$t_closed_statuses = array();
+		}
+		
+		return create_bug_enum_summary( lang_get( 'status_enum_string' ), 'status', $t_closed_statuses, $p_filter );
+}
