@@ -30,11 +30,11 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 
 		$t_query = new DBQuery();
 		$t_sql = 'SELECT handler_id, count(*) as count FROM {bug}';
-		if (!empty($p_filter)) {
-				$t_subquery = filter_cache_subquery($p_filter);
-				$t_sql .= ' AND {bug}.id IN :filter';
-				$t_query->bind('filter', $t_subquery);
-		}
+//		if (!empty($p_filter)) {
+//				$t_subquery = filter_cache_subquery($p_filter);
+//				$t_sql .= ' AND {bug}.id IN :filter';
+//				$t_query->bind('filter', $t_subquery);
+//		}
 		$t_sql .= ' GROUP BY handler_id ORDER BY count DESC';
 		$t_query->sql($t_sql);
 		$t_query->bind(array(
