@@ -8,7 +8,7 @@ use Slim\Http\Response;
 	* @var App $g_app
 	*/
 $g_app->group('/dashboard', function () use ($g_app) {
-		$g_app->get('', 'rest_user_get');
+		$g_app->get('', 'rest_dashboard_get');
 });
 
 /**
@@ -19,7 +19,7 @@ $g_app->group('/dashboard', function () use ($g_app) {
 	* @param array $p_args Arguments
 	* @return Response The augmented response.
 	*/
-function rest_lang_get(Request $p_request, Response $p_response, array $p_args): Response
+function rest_dashboard_get(Request $p_request, Response $p_response, array $p_args): Response
 {
 		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
 				'data' => 'test_data'
