@@ -53,7 +53,7 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 
 		if (count($t_handler_array) == 0) {
 				return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-						'data' => []
+						'data' => $t_specific_where
 				]);
 		}
 
