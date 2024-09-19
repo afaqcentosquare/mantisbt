@@ -23,51 +23,59 @@ function rest_dashboard_get(Request $p_request, Response $p_response, array $p_a
 {
 		$p_filter = summary_get_filter();
 		
+		$data = [
+				'developer_resolved_summary' => developer_resolved_summary($p_filter)
+		];
+		
+		
+		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
+				'data' => $data
+		]);
+}
+
+function developer_resolved_summary(array $p_filter = null): array
+{
 		$t_project_id = helper_get_current_project();
 		$t_user_id = auth_get_current_user_id();
-		$t_specific_where = helper_project_specific_where( $t_project_id, $t_user_id );
-		$t_resolved_status_threshold = config_get( 'bug_resolved_status_threshold' );
+		$t_specific_where = helper_project_specific_where($t_project_id, $t_user_id);
+		$t_resolved_status_threshold = config_get('bug_resolved_status_threshold');
 		
 		$t_query = new DBQuery();
 		$t_sql = 'SELECT handler_id, count(*) as count FROM {bug} WHERE ' . $t_specific_where
 				. ' AND handler_id <> :nouser AND status >= :status_resolved AND resolution = :resolution_fixed';
-		if( !empty( $p_filter ) ) {
-				$t_subquery = filter_cache_subquery( $p_filter );
+		if (!empty($p_filter)) {
+				$t_subquery = filter_cache_subquery($p_filter);
 				$t_sql .= ' AND {bug}.id IN :filter';
-				$t_query->bind( 'filter', $t_subquery );
+				$t_query->bind('filter', $t_subquery);
 		}
 		$t_sql .= ' GROUP BY handler_id ORDER BY count DESC';
-		$t_query->sql( $t_sql );
-		$t_query->bind( array(
+		$t_query->sql($t_sql);
+		$t_query->bind(array(
 				'nouser' => NO_USER,
 				'status_resolved' => (int)$t_resolved_status_threshold,
 				'resolution_fixed' => FIXED,
-		) );
-		$t_query->set_limit( 20 );
+		));
+		$t_query->set_limit(20);
 		
 		$t_handler_array = array();
 		$t_handler_ids = array();
-		while( $t_row = $t_query->fetch() ) {
+		while ($t_row = $t_query->fetch()) {
 				$t_handler_array[$t_row['handler_id']] = (int)$t_row['count'];
 				$t_handler_ids[] = $t_row['handler_id'];
 		}
 		
-		if( count( $t_handler_array ) == 0 ) {
-				return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-						'data' => []
-				]);
+		if (count($t_handler_array) == 0) {
+				return array();
 		}
 		
-		user_cache_array_rows( $t_handler_ids );
+		user_cache_array_rows($t_handler_ids);
 		
-		foreach( $t_handler_array as $t_handler_id => $t_count ) {
-				$t_metrics[user_get_name( $t_handler_id )] = $t_count;
+		foreach ($t_handler_array as $t_handler_id => $t_count) {
+				$t_metrics[user_get_name($t_handler_id)] = $t_count;
 		}
 		
-		arsort( $t_metrics );
+		arsort($t_metrics);
 		
-		
-		return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson([
-				'data' => $t_metrics
-		]);
+		return $t_metrics;
 }
+
