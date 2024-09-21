@@ -7,9 +7,9 @@ use Slim\Http\Response;
 /**
  * @var App $g_app
  */
-$g_app->group('/dashboard', function () use ($g_app) {
-    $g_app->get('', 'rest_dashboard_get');
-    $g_app->get('/developer_resolved_summary', 'rest_developer_resolved_summary_get');
+$g_app->group('/', function () use ($g_app) {
+    $g_app->get('dashboard', 'rest_dashboard_get');
+    $g_app->get('developer_resolved_summary', 'rest_developer_resolved_summary_get');
 });
 
 /**
