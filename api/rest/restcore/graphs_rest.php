@@ -10,6 +10,7 @@ use Slim\Http\Response;
 $g_app->group('/', function () use ($g_app) {
     $g_app->get('dashboard', 'rest_dashboard_get');
     $g_app->get('developer_resolved_summary', 'rest_developer_resolved_summary_get');
+    $g_app->get('developer_open_summary', 'rest_developer_open_summary_get');
 });
 
 /**
@@ -40,6 +41,13 @@ function rest_developer_resolved_summary_get(Request $p_request, Response $p_res
     $p_filter = summary_get_filter();
 
     return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson(developer_resolved_summary($p_filter));
+}
+
+function rest_developer_open_summary_get(Request $p_request, Response $p_response, array $p_args): Response
+{
+    $p_filter = summary_get_filter();
+
+    return $p_response->withStatus(HTTP_STATUS_SUCCESS)->withJson(developer_open_summary($p_filter));
 }
 
 function developer_resolved_summary(array $p_filter = null): array
